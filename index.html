@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Withings callback</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; }
+  code { display: block; font-size: 1.4rem; padding: .75rem; background: #eee; border-radius: 6px; word-break: break-all; }
+  button { margin-top: 1rem; font-size: 1rem; padding: .5rem 1rem; }
+</style>
+</head>
+<body>
+<h1>Withings authorization</h1>
+<p id="msg">No code in this URL.</p>
+<code id="code"></code>
+<button id="copy" hidden>Copy code</button>
+<script>
+  const p = new URLSearchParams(location.search), code = p.get('code'), err = p.get('error');
+  const el = document.getElementById('code'), msg = document.getElementById('msg'), btn = document.getElementById('copy');
+  if (code) {
+    msg.textContent = 'Paste this into the terminal now (it expires in 30 seconds):';
+    el.textContent = code; btn.hidden = false;
+    btn.onclick = () => navigator.clipboard.writeText(code).then(() => btn.textContent = 'Copied');
+    navigator.clipboard?.writeText(code).then(() => btn.textContent = 'Copied', () => {});
+  } else if (err) {
+    msg.textContent = 'Withings returned an error:'; el.textContent = err;
+  }
+</script>
+</body>
+</html>
